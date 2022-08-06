@@ -1,3 +1,6 @@
+from operator import truediv
+
+
 turn = 0
 winstate = False
 winline_length = 3
@@ -52,30 +55,41 @@ gameboard = make_board(3, 3)
 def check_win(board):
     global winline_length
     global winstate
-    wintest = {}
+    wintest = set()
     for i in range(len(board)):
         for j in range(len(board[0])):
             if board[i][j] != "   ":
                 if j <= len(board[0]) - winline_length:
                     for k in range(winline_length):
-                        wintest.append(board[i][j + k])
-                        for n in wintest:
-                            if 
-                    if board[i][j] == board[i][j + 1] == board[i][j + 2]:
+                        wintest.add(board[i][j + k])
+                    if len(wintest) == 1:
                         winstate = True
                         return
-                    if i >= winline_length - 1:
-                        if board[i][j] == board[i - 1][j + 1] == board[i - 2][j + 2]:
-                            winstate = True
-                            return
+                    else:
+                        wintest.clear()
+                    for k in range(winline_length):
+                        wintest.add(board[i - k][j + k])
+                    if len(wintest) == 1:
+                        winstate = True
+                        return
+                    else:
+                        wintest.clear()
                     if i <= len(board) - winline_length:
-                        if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2]:
+                        for k in range(winline_length):
+                            wintest.add(board[i + k][j + k])
+                        if len(wintest) == 1:
                             winstate = True
                             return
+                        else:
+                            wintest.clear()
                 if i <= len(board) - winline_length:
-                    if board[i][j] == board[i + 1][j] == board[i + 2][j]:
+                    for k in range(winline_length):
+                            wintest.add(board[i + k][j])
+                    if len(wintest) == 1:
                         winstate = True
                         return
+                    else:
+                        wintest.clear()
 
 def move(x, y):
     global turn
@@ -84,6 +98,9 @@ def move(x, y):
     global pieces
     global gameboard
     player_piece = pieces[player_turn(players)]
+    if x >= len(gameboard[0]) or y >= len(gameboard):
+        print("Not a legal move..")
+        return
     if gameboard[y][x] == "   ":
         gameboard[y][x] = " " + player_piece + " "
         check_win(gameboard)
