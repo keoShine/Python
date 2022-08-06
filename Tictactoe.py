@@ -120,4 +120,4 @@ while winstate == False:
     y = int(input("Move row: "))
     move(x, y)
     
-input("Press any key to exit: ")
+input("Press any key to exit.. ")
