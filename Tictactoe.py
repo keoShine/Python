@@ -122,3 +122,5 @@ while winstate == False:
     x = int(input("Move column: "))
     y = int(input("Move row: "))
     move(x, y)
+    
+input("Press any key to exit: ")
