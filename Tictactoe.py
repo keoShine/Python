@@ -1,6 +1,3 @@
-from operator import truediv
-
-
 turn = 0
 winstate = False
 winline_length = 3
