@@ -1,7 +1,7 @@
 turn = 0
 winstate = False
 players = 2 #int(input("Number of players: "))
-max_removes = 4
+max_removes = 0 #If max_removes == 0, there is no limit on the number of counts that can be removed per turn
 
 #Make piles
 def make_piles():
@@ -33,6 +33,7 @@ def turn_inc():
 
 piles = make_piles()
 
+#Check whether all piles have been reduced to 0
 def check_win():
     global winstate
     global piles
@@ -52,7 +53,7 @@ def remove_counters(x, y = 0):
     if y >= len(piles):
         print("Invalid pile; there are " + str(len(piles)) + " piles in play..")
         return
-    if x > max_removes:
+    if x > max_removes and max_removes != 0:
         print("Invalid move; a maximum of " + str(max_removes) + " can be removed per turn..")
     elif x == 0:
         print("Invalid move; at least one counter must be removed per turn..")
@@ -71,6 +72,28 @@ def remove_counters(x, y = 0):
             turn_inc()
             print("")
             print("Remaining piles: " + str(piles))
+
+#Bitwise xor across all piles
+def nim_sum(n):
+    global max_removes
+    sum = 0
+    for i in n:
+        sum = sum ^ i if max_removes == 0 else sum ^ (i % (max_removes + 1))
+    return sum
+
+def optimal_move(n):
+    p = nim_sum(n)
+    if p == 0:
+        print("No optimal move; opponent will win with optimal play")
+        for i in range(len(n)):
+            if n[i] != 0:
+                return [1, i] 
+    else:
+        k = len(bin(p)) - 3
+        for i in range(len(n)):
+            if n[i] >> k == 1:
+                return [n[i] - (n[i] ^ p), i]
+
 
 while winstate == False:
     x = int(input("Counters to remove: "))
