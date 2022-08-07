@@ -82,17 +82,20 @@ def nim_sum(n):
     return sum
 
 def optimal_move(n):
+    res = [0, 0]
     p = nim_sum(n)
     if p == 0:
         print("No optimal move; opponent will win with optimal play")
         for i in range(len(n)):
             if n[i] != 0:
-                return [1, i] 
+                res = [1, i]
+            break
     else:
         k = len(bin(p)) - 3
         for i in range(len(n)):
-            if n[i] >> k == 1:
-                return [n[i] - (n[i] ^ p), i]
+            if (n[i] >> k) % 2 == 1:
+                if n[i] - (n[i] ^ p) > res[0]: res = [n[i] - (n[i] ^ p), i]
+    return res
 
 
 while winstate == False:
